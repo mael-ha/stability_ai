@@ -2,7 +2,7 @@
 
 RSpec.describe StabilityAi do
   it "has a version number" do
-    expect(StabilityAi::VERSION).not_to be nil
+    expect(StabilityAI::VERSION).not_to be nil
   end
 
   it "does something useful" do

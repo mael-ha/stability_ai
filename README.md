@@ -1,39 +1,83 @@
-# StabilityAi
+# StabilityAI
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/stability_ai`. To experiment with that code, run `bin/console` for an interactive prompt.
+StabilityAI is a Ruby gem that simplifies interactions with the Stability AI API. It supports image generation, image-to-image manipulation, upscaling, and masking.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
+```ruby
+gem 'stability_ai'
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+And then execute:
+```ruby
+$ bundle install
+```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Or install it yourself as:
+```ruby
+gem install stability_ai
+```
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+## Configuration
+
+Create an initializer in your Rails project or any Ruby application (e.g., `config/initializers/stability_ai.rb`) to configure your API keys and credentials:
+
+```ruby
+StabilityAI.configure do |config|
+  config.stability_api_key = 'your_stability_api_key'
+  config.path_prefix = './'
+end
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Here's an example of how to use the gem with the Stability AI API:
+Check [StabilityAI API](https://api.stability.ai/docs) for all the options available. If there are not passed in the `options` hash, the default value is used.
 
-## Development
+```ruby
+require 'stability_ai'
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+client = StabilityAI::Client.new
+
+# Text to image
+text_to_image_response = client.text_to_image('engine_id', text_prompts: [{ text: 'A lighthouse on a cliff' }])
+uri_image_1 = text_to_image_response.image_uris.first           # ->  <img src="#{uri_image_1}"/>  or image_tag(uri_image_1)
+text_to_image_response.save_images('your_image_name_prefix')  # -> returns ["your_image_name_prefix_1.png", "your_image_name_prefix_2.png", ...]
+
+# Image to image
+
+options =     {
+      text_prompts: [
+        {
+          text: "Snow",
+        }
+      ],
+      image_strength: 0.35, # Default: 0.35 How much influence the init_image has on the diffusion process. Values close to 1 will yield images very similar to the init_image while values close to 0 will yield images wildly different than the init_image
+      cfg_scale: 7, # DEFAULT: [0..35] How strictly the diffusion process adheres to the prompt text (higher values keep your image closer to your prompt),
+      # clip_guidance_preset: "FAST_BLUE", # DEFAULT: NONE, WTF IS THAT?? FAST_BLUE FAST_GREEN NONE SIMPLE SLOW SLOWER SLOWEST
+      # sampler: "DDIM",    # DEFAULT: Automatically choose by StableAI. DDIM DDPM K_DPMPP_2M K_DPMPP_2S_ANCESTRAL K_DPM_2 K_DPM_2_ANCESTRAL K_EULER K_EULER_ANCESTRAL K_HEUN K_LMS
+      sytle_preset: "neon-punk", # check
+    }
+response = client.image_to_image(image_path: image_path, )
+
+# Image to image upscale
+response = client.image_to_image_upscale(engine_id: "esrgan-v1-x2plus", image_path: image_path, options: { width: 1024 })
+response = client.image_to_image_upscale(image_path: image_path, use_maximum_resolution: true) # default engine: esrgan-v1-x2plus / use `use_maximum_resolution: true` is to use 2048px
+response = client.image_to_image_upscale(image_binary: image_binary, )
+
+# Image to image masking
+# TODO
+```
+
+Replace `'engine_id'` with the appropriate engine ID for each method call.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/stability_ai. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/stability_ai/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/mael-ha/stability_ai.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the StabilityAi project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/stability_ai/blob/master/CODE_OF_CONDUCT.md).
+The gem is available as open source under the terms of the MIT License.
