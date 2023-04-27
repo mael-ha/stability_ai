@@ -127,7 +127,7 @@ module StabilityAI
           form_data
         when :image_to_image_upscale
           form_data.merge!("image" => temp_file)
-          max_dimension = set_max_dimension(image, upscale_options, use_maximum_resolution)
+          max_dimension = set_max_dimension(image, options, use_maximum_resolution)
           form_data.merge!(max_dimension) if max_dimension
         end
       end
