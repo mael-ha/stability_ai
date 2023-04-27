@@ -17,7 +17,7 @@ module StabilityAI
         image_payload = create_payload(image_binary, image_base64, image_path)
         image =         convert_and_resize_image(image_payload)
         temp_file =     create_temp_file_from_image(image)
-        form_data =     set_form_data(image, :image_to_image, options, temp_file)
+        form_data =     set_form_data(image:, endpoint: :image_to_image, options:, temp_file:)
 
         default_weight = options[:text_prompts].count > 1 ? (1 / options[:text_prompts].count).round(2) : 1
         options[:text_prompts].each_with_index do |text_prompt, i|
@@ -36,13 +36,13 @@ module StabilityAI
         end
       end
 
-      def image_to_image_upscale(engine_id: "esrgan-v1-x2plus", image_binary: nil, image_base64: nil, image_path: nil, use_maximum_resolution: false, upscale_options: {})
+      def image_to_image_upscale(engine_id: "esrgan-v1-x2plus", image_binary: nil, image_base64: nil, image_path: nil, use_maximum_resolution: false, options: {})
         raise "No image file path provided." unless image_path || image_binary || image_base64
 
         image_payload = create_payload(image_binary, image_base64, image_path)
         image =         convert_and_resize_image(image_payload)
         temp_file =     create_temp_file_from_image(image)
-        form_data =     set_form_data(image, :image_to_image_upscale, upscale_options, temp_file)
+        form_data =     set_form_data(image:, endpoint: :image_to_image_upscale, options: options, temp_file:)
 
         headers = { "Content-Type" => "multipart/form-data" }
         response = self.class.post("/v1/generation/#{engine_id}/image-to-image/upscale", headers: headers, multipart: true, body: form_data)
@@ -96,23 +96,23 @@ module StabilityAI
         [image.columns, image.rows]
       end
 
-      def set_max_dimension(image, upscale_options, use_maximum_resolution)
+      def set_max_dimension(image, options, use_maximum_resolution)
         if use_maximum_resolution
           width, height = get_image_dimensions(image)
           (width > height) ? { 'width' => 2048 } : { 'height' => 2048 }
        else
          case
-         when !upscale_options[:width].nil?
-           { 'width' => upscale_options[:width] }
-         when !upscale_options[:height].nil?
-           { 'height' => upscale_options[:height] }
+         when !options[:width].nil?
+           { 'width' => options[:width] }
+         when !options[:height].nil?
+           { 'height' => options[:height] }
          else
            nil
          end
        end
       end
 
-      def set_form_data(image, endpoint, options, temp_file)
+      def set_form_data(image:, endpoint:, options:, temp_file:, use_maximum_resolution: true)
         raise "No image file provided." unless temp_file
 
         form_data = {}

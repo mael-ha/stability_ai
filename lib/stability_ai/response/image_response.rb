@@ -18,7 +18,7 @@ module StabilityAI
         end
       end
 
-      def save_images(filename_prefix = nil)
+      def save_images(filename_prefix: nil)
         filename_prefix = Time.now.utc.strftime("%Y%m%d%H%M%S") if filename_prefix.nil?
         filenames = []
         path_prefix = StabilityAI.configuration.path_prefix
