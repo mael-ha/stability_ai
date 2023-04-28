@@ -29,7 +29,7 @@ module StabilityAI
           downloaded_images << {
             file_name: image_name,
             seed: artifact["seed"],
-            finish_reason: artifact["finish_reason"],
+            finish_reason: artifact["finishReason"],
           }
         end
         downloaded_images
