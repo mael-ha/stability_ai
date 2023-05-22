@@ -2,6 +2,15 @@
 
 StabilityAI is a Ruby gem that simplifies interactions with the Stability AI API. It supports image generation, image-to-image manipulation, upscaling, and masking.
 
+## Demo
+
+I made this `gem` part of a personal project: [ciel.chat](https://ciel.chat) - an AI supercharged WhatsApp bot, using ChatGPT, Bard, StableDiffusion, Dalle, GoogleSpeech, ElevenLabs.
+You can try it there for free ✌️
+
+## Disclaimer
+
+It's my first gem ever. There are plenty of room for improvements there - feel free to contribute!
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -11,11 +20,13 @@ gem 'stability_ai'
 ```
 
 And then execute:
+
 ```ruby
 $ bundle install
 ```
 
 Or install it yourself as:
+
 ```ruby
 gem install stability_ai
 ```
