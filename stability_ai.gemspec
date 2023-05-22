@@ -4,7 +4,7 @@ require_relative "lib/stability_ai/version"
 
 Gem::Specification.new do |spec|
   spec.name = "stability_ai"
-  spec.version = StabilityAi::VERSION
+  spec.version = StabilityAI::VERSION
   spec.authors = ["Maël Harnois"]
   spec.email = ["m@maelus.com"]
 
