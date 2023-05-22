@@ -54,6 +54,12 @@ module StabilityAI
         end
       end
 
+      # def text_to_animation(engine_id: nil, options: {})
+      #   response = self.class.post("/v1/generation/#{get_engine_id(engine_id)}/text-to-animation", body: options.to_json,
+      #                                                                                          headers: { "Content-Type" => "application/json" })
+      #   handle_response(response)
+      # end
+
       private
 
       def get_engine_id(engine_id)
