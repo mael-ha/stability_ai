@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "httparty"
-require "pry-byebug"
 require "dotenv/load"
 require "base64"
 require "uri"
