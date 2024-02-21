@@ -4,8 +4,10 @@ require "rmagick"
 module StabilityAI
   module API
     module Generation
-      def text_to_image(engine_id: nil, options: {})
-        response = self.class.post("/v1/generation/#{get_engine_id(engine_id)}/text-to-image", body: options.to_json,
+      def text_to_image(engine_id:, text_prompts:, options: {})
+        body = { text_prompts: text_prompts }
+
+        response = self.class.post("/v1/generation/#{get_engine_id(engine_id)}/text-to-image", body: body.merge!(options).to_json,
                                                                                                headers: { "Content-Type" => "application/json" })
         handle_response(response)
       end
@@ -17,7 +19,7 @@ module StabilityAI
         image_payload = create_payload(image_binary, image_base64, image_path)
         image =         convert_and_resize_image(image_payload)
         temp_file =     create_temp_file_from_image(image)
-        form_data =     set_form_data(image:, endpoint: :image_to_image, options:, temp_file:)
+        form_data =     set_form_data(image: image, endpoint: :image_to_image, options: options, temp_file: temp_file)
 
         default_weight = options[:text_prompts].count > 1 ? (1 / options[:text_prompts].count).round(2) : 1
         options[:text_prompts].each_with_index do |text_prompt, i|
@@ -42,7 +44,7 @@ module StabilityAI
         image_payload = create_payload(image_binary, image_base64, image_path)
         image =         convert_and_resize_image(image_payload)
         temp_file =     create_temp_file_from_image(image)
-        form_data =     set_form_data(image:, endpoint: :image_to_image_upscale, options: options, temp_file:)
+        form_data =     set_form_data(image: image, endpoint: :image_to_image_upscale, options: options, temp_file: temp_file)
 
         headers = { "Content-Type" => "multipart/form-data" }
         response = self.class.post("/v1/generation/#{engine_id}/image-to-image/upscale", headers: headers, multipart: true, body: form_data)

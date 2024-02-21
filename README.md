@@ -55,8 +55,7 @@ client = StabilityAI::Client.new
 
 # Text to image
 text_to_image_response = client.text_to_image('engine_id', text_prompts: [{ text: 'A lighthouse on a cliff' }])
-uri_image_1 = text_to_image_response.image_uris.first           # ->  <img src="#{uri_image_1}"/>  or image_tag(uri_image_1)
-text_to_image_response.save_images('your_image_name_prefix')  # -> returns ["your_image_name_prefix_1.png", "your_image_name_prefix_2.png", ...]
+text_to_image_response.save_images(filename_prefix: 'your_image_name_prefix')  # -> returns ["your_image_name_prefix_1.png", "your_image_name_prefix_2.png", ...]
 
 # Image to image
 
