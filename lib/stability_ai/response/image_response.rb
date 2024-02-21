@@ -19,7 +19,7 @@ module StabilityAI
       end
 
       def save_images(filename_prefix: nil)
-        filename_prefix = Time.now.utc.strftime("%Y%m%d%H%M%S") if filename_prefix.nil?
+        filename_prefix = filename_prefix || Time.now.utc.strftime("%Y%m%d%H%M%S")
         downloaded_images = []
         path_prefix = StabilityAI.configuration.path_prefix
         @artifacts.each_with_index do |artifact, i|
